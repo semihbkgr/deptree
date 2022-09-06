@@ -26,7 +26,7 @@ func (m *Mod) AddDependency(mod string, dependency string) {
 	}
 }
 
-func (m *Mod) Tree(depth int) string {
+func (m *Mod) Tree(depth int, vl bool) string {
 	if depth == 0 {
 		return "..."
 	}
@@ -37,22 +37,29 @@ func (m *Mod) Tree(depth int) string {
 	i := 0
 	for _, d := range m.dependencies {
 		if i != len(m.dependencies)-1 {
-			depSb.WriteString("├──")
+			depSb.WriteString("├───")
+			depSb.WriteString(d.Tree(depth-1, true))
 		} else {
-			depSb.WriteString("└──")
+			depSb.WriteString("└───")
+			depSb.WriteString(d.Tree(depth-1, false))
 		}
-		depSb.WriteString(d.Tree(depth - 1))
 		i++
 	}
-	sb.WriteString(tab(depSb.String()))
+	if vl {
+		sb.WriteString(linePrefix(depSb.String(), "│    "))
+	} else {
+		sb.WriteString(linePrefix(depSb.String(), "     "))
+	}
 	return sb.String()
 }
 
-func tab(s string) string {
+func linePrefix(s string, p string) string {
 	lines := strings.Split(s, "\n")
 	sb := strings.Builder{}
 	for _, line := range lines {
-		sb.WriteString("\t" + line + "\n")
+		if len(line) != 0 {
+			sb.WriteString(p + line + "\n")
+		}
 	}
 	return sb.String()
 }

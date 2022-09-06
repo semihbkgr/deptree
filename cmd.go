@@ -18,7 +18,11 @@ func main() {
 	checkErr(err)
 	m, err := parseMods(s)
 	checkErr(err)
-	fmt.Println(m.Tree(*depth))
+	if m != nil {
+		fmt.Println(m.Tree(*depth, false))
+	} else {
+		fmt.Println("module has no dependency")
+	}
 }
 
 func execGoModGraphCommand() (string, error) {
@@ -39,7 +43,7 @@ func checkErr(err error) {
 
 func parseMods(s string) (*Mod, error) {
 	lines := strings.Split(s, "\n")
-	if len(lines) == 0 {
+	if len(lines) == 1 && len(lines[0]) == 0 {
 		return nil, nil
 	}
 	mod := NewMod(lines[0][:strings.Index(lines[0], " ")])
