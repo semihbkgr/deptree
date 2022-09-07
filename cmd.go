@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	depth = flag.Int("depth", 5, "dependency tree depth")
+	depth = flag.Int("d", 5, "depth of dependency tree")
 )
 
 func main() {

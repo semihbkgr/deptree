@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -27,21 +28,23 @@ func (m *Mod) AddDependency(mod string, dependency string) {
 }
 
 func (m *Mod) Tree(depth int, vl bool) string {
-	if depth == 0 {
-		return "..."
-	}
 	sb := strings.Builder{}
 	sb.WriteString(m.name)
 	sb.WriteRune('\n')
 	depSb := strings.Builder{}
 	i := 0
 	for _, d := range m.dependencies {
-		if i != len(m.dependencies)-1 {
+		last := i == len(m.dependencies)-1
+		if !last {
 			depSb.WriteString("├───")
-			depSb.WriteString(d.Tree(depth-1, true))
 		} else {
 			depSb.WriteString("└───")
-			depSb.WriteString(d.Tree(depth-1, false))
+		}
+		if depth > 1 {
+			depSb.WriteString(d.Tree(depth-1, !last))
+		} else {
+			depSb.WriteString(fmt.Sprintf("%d more ...\n", len(m.dependencies)))
+			break
 		}
 		i++
 	}
