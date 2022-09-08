@@ -53,6 +53,5 @@ func parseMods(s string) (*Mod, error) {
 			mod.AddDependency(m, d)
 		}
 	}
-	fmt.Println(mod)
 	return mod, nil
 }
