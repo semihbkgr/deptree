@@ -40,7 +40,7 @@ func (m *Mod) Tree(depth int, vl bool) string {
 		} else {
 			depSb.WriteString("└───")
 		}
-		if depth > 1 {
+		if depth > 0 {
 			depSb.WriteString(d.Tree(depth-1, !last))
 		} else {
 			depSb.WriteString(fmt.Sprintf("%d more ...\n", len(m.dependencies)))

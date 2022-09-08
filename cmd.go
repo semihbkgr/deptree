@@ -36,7 +36,10 @@ func execGoModGraphCommand() (string, error) {
 
 func checkErr(err error) {
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
+		_, err = fmt.Fprintln(os.Stderr, err.Error())
+		if err != nil {
+			panic(err)
+		}
 		os.Exit(1)
 	}
 }
