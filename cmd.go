@@ -16,8 +16,7 @@ func main() {
 	flag.Parse()
 	s, err := execGoModGraphCommand()
 	checkErr(err)
-	m, err := parseMods(s)
-	checkErr(err)
+	m := parseMods(s)
 	if m != nil {
 		fmt.Println(m.Tree(*depth, false))
 	} else {
@@ -25,6 +24,7 @@ func main() {
 	}
 }
 
+//todo: exec error message and exit status
 func execGoModGraphCommand() (string, error) {
 	c := exec.Command("go", "mod", "graph")
 	b, err := c.Output()
@@ -44,10 +44,10 @@ func checkErr(err error) {
 	}
 }
 
-func parseMods(s string) (*Mod, error) {
+func parseMods(s string) *Mod {
 	lines := strings.Split(s, "\n")
 	if len(lines) == 1 && len(lines[0]) == 0 {
-		return nil, nil
+		return nil
 	}
 	mod := NewMod(lines[0][:strings.Index(lines[0], " ")])
 	for i := 0; i < len(lines); i++ {
@@ -56,5 +56,5 @@ func parseMods(s string) (*Mod, error) {
 			mod.AddDependency(m, d)
 		}
 	}
-	return mod, nil
+	return mod
 }

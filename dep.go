@@ -35,7 +35,7 @@ func (m *Mod) Tree(depth int, vl bool) string {
 	i := 0
 	for _, d := range m.dependencies {
 		last := i == len(m.dependencies)-1
-		if !last {
+		if !last && depth > 0 {
 			depSb.WriteString("├───")
 		} else {
 			depSb.WriteString("└───")
