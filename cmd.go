@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -24,12 +25,11 @@ func main() {
 	}
 }
 
-//todo: exec error message and exit status
 func execGoModGraphCommand() (string, error) {
 	c := exec.Command("go", "mod", "graph")
-	b, err := c.Output()
+	b, err := c.CombinedOutput()
 	if err != nil {
-		return "", err
+		return "", errors.New(string(b))
 	}
 	return string(b), nil
 }

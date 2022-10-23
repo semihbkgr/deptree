@@ -5,7 +5,7 @@
 It is inspired by maven `dependency:tree` plugin
 
 ```bash
-$ go install github.com/semihbkgr/deptree:v1.0.0
+$ go install github.com/semihbkgr/deptree@v0.1.2
 ```
 
 Arg `-d` is used to set depth of the tree. It is 5 by default.
