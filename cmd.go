@@ -7,7 +7,6 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"strings"
 )
 
 var (
@@ -28,7 +27,7 @@ func main() {
 		graph = s
 	}
 
-	m := parseMods(graph)
+	m := ParseMods(graph)
 	if m != nil {
 		fmt.Println(m.Tree(*depth, false))
 	} else {
@@ -53,19 +52,4 @@ func checkErr(err error) {
 		}
 		os.Exit(1)
 	}
-}
-
-func parseMods(s string) *Mod {
-	lines := strings.Split(s, "\n")
-	if len(lines) == 1 && len(lines[0]) == 0 {
-		return nil
-	}
-	mod := NewMod(lines[0][:strings.Index(lines[0], " ")])
-	for i := 0; i < len(lines); i++ {
-		m, d, ok := strings.Cut(lines[i], " ")
-		if ok {
-			mod.AddDependency(m, d)
-		}
-	}
-	return mod
 }

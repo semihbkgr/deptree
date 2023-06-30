@@ -6,23 +6,26 @@ import (
 )
 
 type Mod struct {
-	name         string
-	dependencies map[string]*Mod
+	name string
+	deps map[string]*Mod
 }
 
 func NewMod(name string) *Mod {
 	return &Mod{
-		name:         name,
-		dependencies: make(map[string]*Mod),
+		name: name,
+		deps: make(map[string]*Mod),
 	}
 }
 
 func (m *Mod) AddDependency(mod string, dependency string) {
 	if mod == m.name {
-		d := &Mod{name: dependency, dependencies: make(map[string]*Mod)}
-		m.dependencies[dependency] = d
+		d := &Mod{
+			name: dependency,
+			deps: make(map[string]*Mod),
+		}
+		m.deps[dependency] = d
 	}
-	for _, d := range m.dependencies {
+	for _, d := range m.deps {
 		d.AddDependency(mod, dependency)
 	}
 }
@@ -33,8 +36,8 @@ func (m *Mod) Tree(depth int, vl bool) string {
 	sb.WriteRune('\n')
 	depSb := strings.Builder{}
 	i := 0
-	for _, d := range m.dependencies {
-		last := i == len(m.dependencies)-1
+	for _, d := range m.deps {
+		last := i == len(m.deps)-1
 		if !last && depth > 0 {
 			depSb.WriteString("├───")
 		} else {
@@ -43,7 +46,7 @@ func (m *Mod) Tree(depth int, vl bool) string {
 		if depth > 0 {
 			depSb.WriteString(d.Tree(depth-1, !last))
 		} else {
-			depSb.WriteString(fmt.Sprintf("%d more ...\n", len(m.dependencies)))
+			depSb.WriteString(fmt.Sprintf("%d more ...\n", len(m.deps)))
 			break
 		}
 		i++
@@ -65,4 +68,19 @@ func linePrefix(s string, p string) string {
 		}
 	}
 	return sb.String()
+}
+
+func ParseMods(graph string) *Mod {
+	lines := strings.Split(graph, "\n")
+	if len(lines) == 1 && len(lines[0]) == 0 {
+		return nil
+	}
+	mod := NewMod(lines[0][:strings.Index(lines[0], " ")])
+	for i := 0; i < len(lines); i++ {
+		m, d, ok := strings.Cut(lines[i], " ")
+		if ok {
+			mod.AddDependency(m, d)
+		}
+	}
+	return mod
 }
