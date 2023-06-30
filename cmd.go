@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -15,9 +16,19 @@ var (
 
 func main() {
 	flag.Parse()
-	s, err := execGoModGraphCommand()
-	checkErr(err)
-	m := parseMods(s)
+
+	var graph string
+	if len(flag.Args()) > 0 && flag.Args()[0] == "-" {
+		b, err := io.ReadAll(os.Stdin)
+		checkErr(err)
+		graph = string(b)
+	} else {
+		s, err := execGoModGraphCommand()
+		checkErr(err)
+		graph = s
+	}
+
+	m := parseMods(graph)
 	if m != nil {
 		fmt.Println(m.Tree(*depth, false))
 	} else {

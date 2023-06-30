@@ -56,28 +56,13 @@ k8s.io/kubectl
      │    ├───github.com/google/go-cmp@v0.5.8
      │    ├───github.com/onsi/ginkgo/v2@v2.1.4
      │    └───golang.org/x/net@v0.0.0-20220425223048-2871e0cb64e4
-     ├───github.com/pmezard/go-difflib@v1.0.0
-     ├───gopkg.in/yaml.v3@v3.0.1
-     │    └───gopkg.in/check.v1@v0.0.0-20161208181325-20d25e280405
-     ├───github.com/google/shlex@v0.0.0-20191202100458-e7afc7fbc510
-     ├───github.com/gregjones/httpcache@v0.0.0-20180305231024-9cad4c3443a7
-     ├───golang.org/x/text@v0.3.7
-     │    └───golang.org/x/tools@v0.0.0-20180917221912-90fa682c2a6e
-     ├───gopkg.in/inf.v0@v0.9.1
-     ├───github.com/chai2010/gettext-go@v1.0.2
-     ├───github.com/davecgh/go-spew@v1.1.1
-     ├───github.com/daviddengcn/go-colortext@v1.0.0
-     │    ├───github.com/golangplus/bytes@v1.0.0
-     │    │    └───github.com/golangplus/testing@v1.0.0
-     │    │         └───2 more ...
-     │    └───github.com/golangplus/testing@v1.0.0
-     │         ├───github.com/golangplus/bytes@v0.0.0-20160111154220-45c989fe5450
-     │         └───github.com/golangplus/fmt@v1.0.0
-     ├───github.com/mitchellh/go-wordwrap@v1.0.0
-     ├───github.com/moby/spdystream@v0.2.0
-     │    └───github.com/gorilla/websocket@v1.4.2
-     ├───github.com/spf13/pflag@v1.0.5
      .
      .
      .
+```
+
+Input is accepted with `-` arg.
+
+```bash
+$ deptree - < graph.txt
 ```
