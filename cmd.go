@@ -7,10 +7,14 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strings"
+
+	"github.com/awalterschulze/gographviz"
 )
 
 var (
-	depth = flag.Int("d", 5, "depth of dependency tree")
+	depth = flag.Int("depth", 5, "depth of dependency tree")
+	dot   = flag.Bool("dot", false, "output in dot format")
 )
 
 func main() {
@@ -25,6 +29,13 @@ func main() {
 		s, err := execGoModGraphCommand()
 		checkErr(err)
 		graph = s
+	}
+
+	if *dot {
+		dotOut, err := modDot(graph)
+		checkErr(err)
+		fmt.Println(dotOut)
+		return
 	}
 
 	m := ParseMods(graph)
@@ -52,4 +63,32 @@ func checkErr(err error) {
 		}
 		os.Exit(1)
 	}
+}
+
+func modDot(modGraph string) (string, error) {
+	graphAst, _ := gographviz.ParseString(`digraph mod {}`)
+	graph := gographviz.NewGraph()
+	if err := gographviz.Analyse(graphAst, graph); err != nil {
+		return "", err
+	}
+	graph.AddAttr("mod", "rankdir", "LR")
+	graph.AddAttr("mod", "splines", "ortho")
+	nodeAttr := map[string]string{
+		"shape": "rect",
+	}
+	for _, l := range strings.Split(modGraph, "\n") {
+		m, d, ok := strings.Cut(l, " ")
+		m = fmt.Sprintf("%q", m)
+		d = fmt.Sprintf("%q", d)
+		if ok {
+			if !graph.IsNode(m) {
+				graph.AddNode("mod", m, nodeAttr)
+			}
+			if !graph.IsNode(d) {
+				graph.AddNode("mod", d, nodeAttr)
+			}
+			graph.AddEdge(m, d, true, nil)
+		}
+	}
+	return graph.String(), nil
 }
