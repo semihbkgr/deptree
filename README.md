@@ -1,6 +1,6 @@
 # deptree
 
-`deptree` is a utility tool that displays the dependency tree of go modules.
+`deptree` is a utility tool that displays go modules in tree form.
 
 It is inspired by maven `dependency:tree` plugin
 
@@ -8,15 +8,28 @@ It is inspired by maven `dependency:tree` plugin
 $ go install github.com/semihbkgr/deptree@v0.1.2
 ```
 
-Arg `-d` is used to set depth of the tree. It is 5 by default.
-
-__Example__
+to get available args:
 
 ```bash
-$ deptree -d 3
+$ deptree --help
 ```
 
-Output
+- `--depth` sets the depth of the tree. It is 5 by default.
+- `--dot` generates output in dot format (ignores --depth).
+
+empty arg `-` is used to accept inputs.
+
+```bash
+$ deptree - < graph.txt
+```
+
+## Examples
+
+```bash
+$ deptree --depth 3
+```
+
+generates output in tree shape with max 3 depths of the branches
 
 ```
 k8s.io/kubectl
@@ -51,18 +64,7 @@ k8s.io/kubectl
      │    ├───golang.org/x/sys@v0.0.0-20220422013727-9388b58f7150
      │    ├───golang.org/x/text@v0.3.7
      │    │    └───golang.org/x/tools@v0.0.0-20180917221912-90fa682c2a6e
-     │    ├───google.golang.org/protobuf@v1.28.0
-     │    ├───github.com/golang/protobuf@v1.5.2
-     │    ├───github.com/google/go-cmp@v0.5.8
-     │    ├───github.com/onsi/ginkgo/v2@v2.1.4
-     │    └───golang.org/x/net@v0.0.0-20220425223048-2871e0cb64e4
      .
      .
      .
-```
-
-Input is accepted with `-` arg.
-
-```bash
-$ deptree - < graph.txt
 ```
